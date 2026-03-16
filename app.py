@@ -70,7 +70,7 @@ plt.rcParams.update({
 @st.cache_data
 def load_data():
     try:
-        df = pd.read_csv('"Nairobi propertyprices - Sheet1.csv"')
+        df = pd.read_csv('Nairobi propertyprices - Sheet1.csv')
         df.columns = (
             df.columns.str.strip().str.lower()
             .str.replace(' ', '_').str.replace('[^a-z0-9_]', '', regex=True)
