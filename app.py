@@ -82,6 +82,8 @@ def load_data():
                 else:
                     df[col].fillna(df[col].mode()[0], inplace=True)
         price_col = [c for c in df.columns if 'price' in c][0]
+        df[price_col] = df[price_col].str.replace('(?i)ksh', '', regex=True).str.replace(',', '').str.replace(' ', '').str.strip().astype(float)
+        
         lower = df[price_col].quantile(0.01)
         upper = df[price_col].quantile(0.99)
         df = df[(df[price_col] >= lower) & (df[price_col] <= upper)]
