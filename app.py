@@ -70,7 +70,7 @@ plt.rcParams.update({
 @st.cache_data
 def load_data():
     try:
-        df = pd.read_csv('nairobi_house_prices.csv')
+        df = pd.read_csv('"Nairobi propertyprices - Sheet1.csv"')
         df.columns = (
             df.columns.str.strip().str.lower()
             .str.replace(' ', '_').str.replace('[^a-z0-9_]', '', regex=True)
@@ -443,4 +443,4 @@ st.markdown("---")
 st.markdown(
     "<div style='text-align:center;color:#555;font-size:0.75rem;'>"
     "Nairobi Housing Price Prediction | Machine Learning Case Study</div>",
-    unsafe_allow_html=True)
+    unsafe_allow_html=True )
