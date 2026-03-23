@@ -12,7 +12,7 @@ warnings.filterwarnings('ignore')
 
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 
-# ── Page Config ────────────────────────────────────────────────────────────
+#  Page Config 
 st.set_page_config(
     page_title="Nairobi Housing Price Predictor",
     page_icon="🏠",
@@ -20,7 +20,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# ── Custom CSS ─────────────────────────────────────────────────────────────
+#  Custom CSS 
 st.markdown("""
 <style>
     .main { background-color: #0f0f1a; }
@@ -66,30 +66,54 @@ plt.rcParams.update({
 })
 
 
-# ── Data & Model Loading ───────────────────────────────────────────────────
-@st.cache_data
+# Data & Model Loading 
 def load_data():
     try:
         df = pd.read_csv('Nairobi propertyprices - Sheet1.csv')
+
         df.columns = (
             df.columns.str.strip().str.lower()
-            .str.replace(' ', '_').str.replace('[^a-z0-9_]', '', regex=True)
+            .str.replace(' ', '_')
+            .str.replace('[^a-z0-9_]', '', regex=True)
         )
+
+        # Handle missing values
         for col in df.columns:
             if df[col].isnull().sum() > 0:
                 if df[col].dtype in ['float64', 'int64']:
                     df[col].fillna(df[col].median(), inplace=True)
                 else:
                     df[col].fillna(df[col].mode()[0], inplace=True)
-        price_col = [c for c in df.columns if 'price' in c][0]
-        df[price_col] = df[price_col].str.replace('(?i)ksh', '', regex=True).str.replace(',', '').str.replace(' ', '').str.strip().astype(float)
-        
+
+        # Fix property type typo
+        if 'propertytype' in df.columns:
+            df['propertytype'] = df['propertytype'].str.strip().str.title()
+            df['propertytype'] = df['propertytype'].replace({'Townhuse': 'Townhouse'})
+
+        # Identify price column
+        price_col = [c for c in df.columns if 'price' in c.lower()][0]
+
+        # Clean price column
+        df[price_col] = (
+            df[price_col]
+            .astype(str)
+            .str.replace('(?i)ksh', '', regex=True)
+            .str.replace(',', '')
+            .str.replace(' ', '')
+            .str.strip()
+            .astype(float)
+        )
+
+        # Remove outliers
         lower = df[price_col].quantile(0.01)
         upper = df[price_col].quantile(0.99)
         df = df[(df[price_col] >= lower) & (df[price_col] <= upper)]
+
         return df, price_col
+
     except FileNotFoundError:
         return None, None
+
 
 
 @st.cache_resource
