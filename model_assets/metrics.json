@@ -1,1 +1,1 @@
-{"random_forest": {"RMSE": 0.4085, "MAE": 0.2806, "R2": 0.8775}, "linear_regression": {"RMSE": 0.6152, "MAE": 0.467, "R2": 0.7222}}
+{"random_forest": {"RMSE": 0.4082, "MAE": 0.2799, "R2": 0.8777}, "linear_regression": {"RMSE": 0.6019, "MAE": 0.4567, "R2": 0.7341}}
